@@ -17,7 +17,7 @@ jobs:
         name: Pushoo Action
         uses: ./.
         with:
-          platforms: wecom dingtalk
+          platforms: wecom, dingtalk
           tokens: ${{ secrets.PUSH_TOKEN }}
           content: |
             # Pushoo Action Test

@@ -33,24 +33,29 @@ A GitHub Action with [Pushoo.js](https://github.com/imaegoo/pushoo) pushes multi
 name: CI
 on:
   push:
-    branches:
-      - 'main'
+    tags:
+      - '*'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
 jobs:
-  Push-Message:
+  PushooPush:
     runs-on: ubuntu-latest
     steps:
       -
         name: Checkout
         uses: actions/checkout@v2
       -
-        name: Push Message
-        uses: funnyzak/pushoo-action@latest
+        name: Pushoo Action
+        uses: ./.
         with:
-          platforms: wecom, dingtalk
+          platforms: wecom, dingtalk, bark
           tokens: ${{ secrets.PUSH_TOKEN }}
           content: |
-            # Hello World
-          title: Pushoo Push
+            # Pushoo Action Test
+            trigger event: ${{ github.event_name }}
+          title: Pushoo Action Test
+          options: '{"bark": { "url": "https://github.com/funnyzak" }}'
           debug: false
 ```
 

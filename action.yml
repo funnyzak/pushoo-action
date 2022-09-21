@@ -1,0 +1,32 @@
+name: "Pushoo Action"
+description: "A GitHub Action with Pushoo.js pushes multiple platform messages."
+author: "funnyzak"
+branding:
+  icon: "message-circle"
+  color: "gray-dark"
+inputs:
+  platforms:
+    description: "The target platform list to be pushed is separated by comma. supporting qmsg、serverchan、pushplus、pushplushxtrip、dingtalk、wecom、bark、gocqhttp、atri、pushdeer、igot、telegram、feishu"
+    required: true
+  tokens:
+    description: "The platform user identity identification list is usually a string of numbers and letters.Need to correspond to Platforms to separate from the comma."
+    required: true
+  content:
+    description: "The push content of the Markdown format. If the push platform does not support MarkDown, Pushoo will automatically convert to support formats."
+    required: true
+  title:
+    description: "Optional, message title, if the push platform does not support message title, it will be spliced in the first line of the text."
+    required: false
+  options_config:
+    description: "Optional, some additional configuration file paths when pushing.The content of the file must be JSON format."
+    required: false
+  debug:
+    description: "Enable the debug flag to show detail log."
+    required: false
+    default: 'false'
+outputs:
+  metadata:
+    description: 'Push result metadata'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'

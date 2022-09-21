@@ -1,0 +1,9 @@
+{
+  "editor.codeActionsOnSave": {
+  
+  },
+  "volar.vueserver.textDocumentSync": "none",
+  "volar.updateImportsOnFileMove.enabled": false,
+  "volar.completion.autoImportComponent": false,
+  "volar.takeOverMode.enabled": false
+}

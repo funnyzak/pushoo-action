@@ -1,0 +1,28 @@
+name: Test
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  run:
+    name: Run
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Pushoo Action
+        uses: ./.
+        with:
+          platforms: wecom, dingtalk
+          tokens: ${{ secrets.PUSH_TOKEN }}
+          content: |
+            # Pushoo Action Test
+            trigger event: ${{ github.event_name }}
+          title: Pushoo Action Test
+          debug: false
+
+

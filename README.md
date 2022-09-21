@@ -4,8 +4,9 @@
 [![Sourcegraph][sg-image]][sg-url]
 [![action][ci-image]][ci-url]
 [![GitHub repo size][repo-size-image]][repository-url]
-<!-- [![Release Date][rle-image]][rle-url] -->
 [![GitHub last commit][last-commit-image]][repository-url]
+<!-- [![Release Date][rle-image]][rle-url] -->
+
 
 [license-image]: https://img.shields.io/github/license/funnyzak/pushoo-action.svg?style=flat-square
 [repository-url]: https://github.com/funnyzak/pushoo-action

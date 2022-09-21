@@ -4,9 +4,8 @@
 [![Sourcegraph][sg-image]][sg-url]
 [![action][ci-image]][ci-url]
 [![GitHub repo size][repo-size-image]][repository-url]
+[![latest tag][tag-image]][rle-url]
 [![GitHub last commit][last-commit-image]][repository-url]
-<!-- [![Release Date][rle-image]][rle-url] -->
-
 
 [license-image]: https://img.shields.io/github/license/funnyzak/pushoo-action.svg?style=flat-square
 [repository-url]: https://github.com/funnyzak/pushoo-action
@@ -24,6 +23,7 @@
 [rle-image]: https://img.shields.io/github/release-date/funnyzak/pushoo-action.svg
 [sg-image]: https://img.shields.io/badge/view%20on-Sourcegraph-brightgreen.svg?style=flat-square
 [sg-url]: https://sourcegraph.com/github.com/funnyzak/pushoo-action
+[tag-image]: https://img.shields.io/github/v/tag/funnyzak/pushoo-action
 
 A GitHub Action with [Pushoo.js](https://github.com/imaegoo/pushoo) pushes multiple platform messages.
 

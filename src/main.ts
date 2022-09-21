@@ -21,7 +21,7 @@ async function run(): Promise<void> {
         token: inputs.tokens[index],
         title: inputs.title,
         content: inputs.content,
-        options: inputs.options_config && inputs.options_config !== '' && (await fs.existsSync(inputs.options_config)) ? JSON.parse(await fs.readFileSync(inputs.options_config, 'utf8')) : {}
+        options: inputs.options_file && inputs.options_file !== '' && (await fs.existsSync(inputs.options_file)) ? JSON.parse(await fs.readFileSync(inputs.options_file, 'utf8')) : {}
       });
 
       await core.group(`Platform Push Result`, async () => {

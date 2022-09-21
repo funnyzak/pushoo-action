@@ -1,13 +1,13 @@
-name: Test
+name: CI
 on:
   push:
-    branches: [main]
+    tags:
+      - '*'
   pull_request:
     branches: [main]
   workflow_dispatch:
 jobs:
-  run:
-    name: Run
+  PushooPush:
     runs-on: ubuntu-latest
     steps:
       -
@@ -17,7 +17,7 @@ jobs:
         name: Pushoo Action
         uses: ./.
         with:
-          platforms: wecom, dingtalk
+          platforms: wecom dingtalk
           tokens: ${{ secrets.PUSH_TOKEN }}
           content: |
             # Pushoo Action Test

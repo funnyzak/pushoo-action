@@ -16,7 +16,7 @@ export interface Inputs {
   tokens: string[];
   content: string;
   title: string;
-  options_config: string;
+  options_file: string;
   debug: boolean;
   timeout: number;
 }
@@ -52,7 +52,7 @@ export async function getInputs(): Promise<Inputs> {
     tokens: await getInputList('tokens'),
     content: core.getInput('content'),
     title: core.getInput('title'),
-    options_config: core.getInput('options_config'),
+    options_file: core.getInput('options_file'),
     debug: core.getInput('debug') == 'true',
     timeout: parseInt(core.getInput('timeout'))
   };

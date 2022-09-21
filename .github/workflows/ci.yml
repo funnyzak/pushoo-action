@@ -17,12 +17,13 @@ jobs:
         name: Pushoo Action
         uses: ./.
         with:
-          platforms: wecom, dingtalk
+          platforms: wecom, dingtalk, bark
           tokens: ${{ secrets.PUSH_TOKEN }}
           content: |
             # Pushoo Action Test
             trigger event: ${{ github.event_name }}
           title: Pushoo Action Test
+          options: '{"bark": { "url": "https://github.com/funnyzak" }}'
           debug: false
 
 

@@ -62,7 +62,7 @@ jobs:
 | `tokens`            | List/CSV | List of [token](https://github.com/imaegoo/pushoo) (e.g., `dingtalk_token_string,wecom_token_string`)                 |
 | `content`          | String   | The push content of the Markdown format. If the push platform does not support MarkDown, Pushoo will automatically convert to support formats.                                                                                       |
 | `title`    | String   | Optional, message title, if the push platform does not support message title, it will be spliced in the first line of the text.              |
-| `options_file`          | String   | Optional, some additional configuration file paths when pushing.The content of the file must be JSON format.  |
+| `options`          | String   | Optional, For some additional configuration when pushing, Json string.  |
 | `debug`             | Boolean   | Enable the debug flag to show detail log. |             
 
 ## Contribution

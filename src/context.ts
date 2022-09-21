@@ -16,7 +16,7 @@ export interface Inputs {
   tokens: string[];
   content: string;
   title: string;
-  options_file: string;
+  options: any;
   debug: boolean;
   timeout: number;
 }
@@ -47,12 +47,20 @@ export function tmpNameSync(options?: tmp.TmpNameOptions): string {
 }
 
 export async function getInputs(): Promise<Inputs> {
+  let extraOptions: any = undefined;
+
+  try {
+    extraOptions = JSON.parse(core.getInput('options'));
+  }catch (e) {
+    extraOptions = undefined;
+  }
+
   return {
     platforms: (await getInputList('platforms')).map(v => v as ChannelType),
     tokens: await getInputList('tokens'),
     content: core.getInput('content'),
     title: core.getInput('title'),
-    options_file: core.getInput('options_file'),
+    options: extraOptions,
     debug: core.getInput('debug') == 'true',
     timeout: parseInt(core.getInput('timeout'))
   };

@@ -30,7 +30,7 @@ A GitHub Action with [Pushoo.js](https://github.com/imaegoo/pushoo) pushes multi
 ## Usages
 
 ```yaml
-name: Ci
+name: CI
 on:
   push:
     branches:

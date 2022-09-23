@@ -18,7 +18,10 @@
   },
   "keywords": [
     "actions",
-    "push"
+    "push",
+    "pushoo.js",
+    "github-action",
+    "push-message"
   ],
   "author": "funnyzak",
   "contributors": [

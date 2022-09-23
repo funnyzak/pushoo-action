@@ -47,7 +47,7 @@ jobs:
         uses: actions/checkout@v2
       -
         name: Pushoo Action
-        uses: ./.
+        uses: funnyzak/pushoo-action@main
         with:
           platforms: wecom, dingtalk, bark
           tokens: ${{ secrets.PUSH_TOKEN }}

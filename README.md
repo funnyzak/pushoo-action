@@ -33,20 +33,23 @@ A GitHub Action with [Pushoo.js](https://github.com/imaegoo/pushoo) pushes multi
 name: CI
 on:
   push:
+    branches:
+      - main
     tags:
       - '*'
   pull_request:
     branches: [main]
   workflow_dispatch:
 jobs:
-  PushooPush:
+  push-message:
+    name: Push Message
     runs-on: ubuntu-latest
     steps:
     -
       name: Checkout
       uses: actions/checkout@v2
     -
-      name: Pushoo Action
+      name: Push Message
       uses: funnyzak/pushoo-action@main
       with:
         platforms: ifttt, wecombot, dingtalk, bark

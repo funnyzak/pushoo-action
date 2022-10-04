@@ -1,5 +1,9 @@
 # Pushoo Github Action
 
+A GitHub Action with [Pushoo.js](https://github.com/imaegoo/pushoo) pushes multiple platform messages.
+
+**You also can use [Pushoo CLI](https://github.com/funnyzak/pushoo-cli) to push messages on command line.**
+
 [![action][ci-image]][ci-url]
 [![license][license-image]][repository-url]
 [![Sourcegraph][sg-image]][sg-url]
@@ -24,8 +28,6 @@
 [sg-image]: https://img.shields.io/badge/view%20on-Sourcegraph-brightgreen.svg?style=flat-square
 [sg-url]: https://sourcegraph.com/github.com/funnyzak/pushoo-action
 [tag-image]: https://img.shields.io/github/v/tag/funnyzak/pushoo-action
-
-A GitHub Action with [Pushoo.js](https://github.com/imaegoo/pushoo) pushes multiple platform messages.
 
 ## Usages
 

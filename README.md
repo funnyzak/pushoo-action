@@ -29,16 +29,18 @@ A GitHub Action with [Pushoo.js](https://github.com/imaegoo/pushoo) pushes multi
 [sg-url]: https://sourcegraph.com/github.com/funnyzak/pushoo-action
 [tag-image]: https://img.shields.io/github/v/tag/funnyzak/pushoo-action
 
-## Usages
+## Usage
 
-```yaml
+you can use this action in your workflow like this:
+
+```yml
 name: CI
 on:
   push:
     branches:
       - main
     tags:
-      - '*'
+      - "*"
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -47,21 +49,26 @@ jobs:
     name: Push Message
     runs-on: ubuntu-latest
     steps:
-    -
-      name: Checkout
-      uses: actions/checkout@v2
-    -
-      name: Push Message
-      uses: funnyzak/pushoo-action@main
-      with:
-        platforms: ifttt, wecombot, dingtalk, bark
-        tokens: ${{ secrets.PUSH_TOKEN }}
-        content: |
-          # ${{ github.event.repository.name }} Pushoo
-          trigger event: ${{ github.event_name }}
-        title: ${{ github.event.repository.name }} Pushoo
-        options: '{"bark": { "url": "https://github.com/${{github.repository}}" }}'
-        debug: false
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Push Message
+        uses: funnyzak/pushoo-action@main
+        with:
+          platforms: ifttt,wecombot,bark
+          tokens: ${{ secrets.PUSH_TOKEN }}
+          content: |
+            # ${{ github.event.repository.name }} ${{ github.event_name }} Message
+            ## trigger: ${{ github.event_name }} at ${{ github.event.head_commit.timestamp }}
+            ## commit message: ${{ github.event.head_commit.message }}
+            ## commit url: ${{ github.event.head_commit.url }}
+            ## commit author: ${{ github.event.head_commit.author.name }}
+            ## commit email: ${{ github.event.head_commit.author.email }}
+            ## commit id: ${{ github.event.head_commit.id }}
+          title: |
+            ${{ github.repository }} ${{ github.event_name }} Message
+          options: '{"bark": { "url": "https://github.com/${{github.repository}}" }}'
+          debug: false
+
 ```
 
 ## Inputs

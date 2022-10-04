@@ -1,71 +1,82 @@
 name: CI
 on:
   push:
+    branches:
+      - main
     tags:
       - '*'
   pull_request:
     branches: [main]
   workflow_dispatch:
 jobs:
-  PushooPush:
+  action-test:
+    name: Action Test
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v2
-      -
-        name: Pushoo Action
-        uses: ./.
-        with:
-          platforms: wecom, dingtalk, bark
-          tokens: ${{ secrets.PUSH_TOKEN }}
-          content: |
-            # Pushoo Action Test
-            trigger event: ${{ github.event_name }}
-          title: Pushoo Action Test
-          options: '{"bark": { "url": "https://github.com/funnyzak" }}'
-          debug: false
+    -
+      name: Checkout
+      uses: actions/checkout@v2
+    -
+      name: Pushoo Push
+      uses: ./.
+      with:
+        platforms: ifttt, wecombot, bark
+        tokens: ${{ secrets.PUSH_TOKEN }}
+        content: |
+          # Pushoo Action Test
+          trigger event: ${{ github.event_name }}
+        title: Pushoo Action Test
+        options: '{"bark": { "url": "https://github.com/${{github.repository}}" }}'
+        debug: false
 
-
-  Release:
+  release:
+    name: Release
     env:
-      DIST_ARCHIVE_NAME: pushoo-action
+      DIST_ARCHIVE_NAME: ${{ github.event.repository.name }}
     runs-on: ubuntu-latest
-    needs: [PushooPush]
+    needs: [action-test]
     if: startsWith(github.ref, 'refs/tags/')
     strategy:
       matrix:
         node-version: [ 16.x ]
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
+    -
+      name: Checkout
+      uses: actions/checkout@v2
+    -
+      name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
         registry-url: 'https://registry.npmjs.org/'
         cache: 'npm'
-    - name: Install dependencies
+    -
+      name: Install dependencies and build
       run: |
         npm install
         npm run build
-    - name: Get the version
+    -
+      name: Get the version
       id: get_version
       run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
-    - name: build changelog
+    -
+      name: Build changelog
       id: build_changelog
       uses: mikepenz/release-changelog-builder-action@v2.9.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        configuration: "config/changelog_configuration.json"
+        configuration: ".github/config/changelog_configuration.json"
         ignorePreReleases: "false"
-    - name: Archive Release
+    -
+      name: Release package
       uses: papeloto/action-zip@v1
       with:
         files: dist/ READEME.md package.json LICENSE action.yml
         recursive: false
         dest: ${{ env.DIST_ARCHIVE_NAME }}.zip
-    - name: Create Release
+    -
+      name: Release
       uses: softprops/action-gh-release@v1
       with:
         body: ${{steps.build_changelog.outputs.changelog}}
@@ -73,3 +84,15 @@ jobs:
           ${{ env.DIST_ARCHIVE_NAME }}.zip
       env:
         GITHUB_TOKEN: ${{ secrets.github_token }}
+    -
+      name: Pushoo Push
+      uses: ./.
+      with:
+        platforms: ifttt, wecombot, bark
+        tokens: ${{ secrets.PUSH_TOKEN }}
+        content: |
+          # ${{ github.event.repository.name }}: ${{ steps.get_version.outputs.VERSION }} Released
+          trigger event: ${{ github.event_name }}
+        title: "${{ github.event.repository.name }}:${{ steps.get_version.outputs.VERSION }} Released"
+        options: '{"bark": { "url": "https://github.com/${{github.repository}}" }}'
+        debug: false

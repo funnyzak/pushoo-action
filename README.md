@@ -1,8 +1,8 @@
 # Pushoo Github Action
 
+[![action][ci-image]][ci-url]
 [![license][license-image]][repository-url]
 [![Sourcegraph][sg-image]][sg-url]
-[![action][ci-image]][ci-url]
 [![GitHub repo size][repo-size-image]][repository-url]
 [![latest tag][tag-image]][rle-url]
 [![GitHub last commit][last-commit-image]][repository-url]
@@ -20,7 +20,7 @@
 [rle-all-url]: https://github.com/funnyzak/pushoo-action/releases
 [ci-image]: https://img.shields.io/github/workflow/status/funnyzak/pushoo-action/CI
 [ci-url]: https://github.com/funnyzak/pushoo-action/actions
-[rle-image]: https://img.shields.io/github/release-date/funnyzak/pushoo-action.svg
+[rle-image]:  https://github.com/funnyzak/pushoo-action/actions/workflows/ci.yml/badge.svg
 [sg-image]: https://img.shields.io/badge/view%20on-Sourcegraph-brightgreen.svg?style=flat-square
 [sg-url]: https://sourcegraph.com/github.com/funnyzak/pushoo-action
 [tag-image]: https://img.shields.io/github/v/tag/funnyzak/pushoo-action
@@ -42,21 +42,21 @@ jobs:
   PushooPush:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v2
-      -
-        name: Pushoo Action
-        uses: funnyzak/pushoo-action@main
-        with:
-          platforms: wecom, dingtalk, bark
-          tokens: ${{ secrets.PUSH_TOKEN }}
-          content: |
-            # Pushoo Action Test
-            trigger event: ${{ github.event_name }}
-          title: Pushoo Action Test
-          options: '{"bark": { "url": "https://github.com/funnyzak" }}'
-          debug: false
+    -
+      name: Checkout
+      uses: actions/checkout@v2
+    -
+      name: Pushoo Action
+      uses: funnyzak/pushoo-action@main
+      with:
+        platforms: ifttt, wecombot, dingtalk, bark
+        tokens: ${{ secrets.PUSH_TOKEN }}
+        content: |
+          # ${{ github.event.repository.name }} Pushoo
+          trigger event: ${{ github.event_name }}
+        title: ${{ github.event.repository.name }} Pushoo
+        options: '{"bark": { "url": "https://github.com/${{github.repository}}" }}'
+        debug: false
 ```
 
 ## Inputs

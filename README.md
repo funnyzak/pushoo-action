@@ -71,6 +71,8 @@ jobs:
 
 ```
 
+**NOTE:** You need to set the `PUSH_TOKEN` secret in your repository settings.
+
 ## Inputs
 
 | Name               | Type     | Description                                                                                                                                                                        |

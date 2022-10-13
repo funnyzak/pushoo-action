@@ -118,8 +118,10 @@ jobs:
         with:
           commit_user_name: Leon
           commit_user_email: silenceace@gmail.com
-          commit_message: |
-            ${{ env.PACKAGE_VERSION_NAME }}
+          commit_author: leon <silenceace@gmail.com>
+          commit_options: '--no-verify'
+          repository: .
+          commit_message: ${{ env.PACKAGE_VERSION_NAME }}
           file_pattern: dist
       - name: Release
         uses: softprops/action-gh-release@v1

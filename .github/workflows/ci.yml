@@ -120,11 +120,11 @@ jobs:
           commit_user_email: silenceace@gmail.com
           commit_message: |
             ${{ env.PACKAGE_VERSION_NAME }}
-          file_pattern: dist/**/*
+          file_pattern: dist
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          name: ${{ env.PACKAGE_VERSION_NAME }}-${{ env.COMMIT_ID }}
+          name: ${{ env.PACKAGE_VERSION_NAME }}
           tag_name: ${{ env.TAG_NAME }}
           body: ${{steps.build_changelog.outputs.changelog}}
           files: |

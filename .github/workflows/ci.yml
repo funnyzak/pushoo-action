@@ -81,11 +81,11 @@ jobs:
           echo "VERSION=$(echo $GITHUB_REF | cut -d / -f 3)“ >> $GITHUB_ENV
           echo "TAG_NAME=$(git describe --tags --abbrev=0)“ >> $GITHUB_ENV
           echo "BUILD_TIMESTAMP=$(date +%s)“ >> $GITHUB_ENV
-          echo "BUILD_TIME=$(date "+%Y-%m-%d-%H-%M")"" >> $GITHUB_ENV
+          echo "BUILD_TIME=$(date "+%Y-%m-%d-%H-%M")" >> $GITHUB_ENV
       - name: Set dist name
         id: set_dist_name
         run: |
-          echo "DIST_ZIP_NAME=$(echo "${{ env.DIST_ARCHIVE_PREFIX_NAME }}-${{ env.PACKAGE_VERSION_NAME }}-${{env.BUILD_TIMESTAMP}}-${{ env.COMMIT_ID }}.zip")"" >> $GITHUB_ENV
+          echo "DIST_ZIP_NAME=$(echo "${{ env.DIST_ARCHIVE_PREFIX_NAME }}-${{ env.PACKAGE_VERSION_NAME }}-${{env.BUILD_TIMESTAMP}}-${{ env.COMMIT_ID }}.zip")" >> $GITHUB_ENV
       - name: Build changelog
         id: build_changelog
         uses: mikepenz/release-changelog-builder-action@v2.9.0

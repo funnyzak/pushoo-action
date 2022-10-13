@@ -40,7 +40,6 @@
     "tmp": "^0.2.1"
   },
   "devDependencies": {
-    "@types/csv-parse": "^1.2.2",
     "@types/node": "^18.8.5",
     "@types/tmp": "^0.2.3",
     "@typescript-eslint/eslint-plugin": "^5.40.0",

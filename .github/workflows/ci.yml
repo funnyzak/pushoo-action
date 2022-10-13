@@ -3,27 +3,152 @@ on:
   push:
     branches:
       - main
+      - dev
     tags:
       - '*'
   pull_request:
-    branches: [main]
   workflow_dispatch:
+env:
+  DIST_ARCHIVE_PREFIX_NAME: ${{ github.event.repository.name }}
+
 jobs:
   action-test:
-    name: Action Test
+    name: Action test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
     steps:
-    -
-      name: Checkout
-      uses: actions/checkout@v2
-    -
-      name: Pushoo Push
-      uses: ./.
-      with:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Install dependencies and build
+        run: |
+          npm ci
+          npm build
+      - name: Pushoo Push
+        uses: ./.
+        with:
+            platforms: ifttt,wecombot,bark
+            tokens: ${{ secrets.PUSH_TOKEN }}
+            content: |
+              # ${{ github.event.repository.name }} Action Test Message
+              ## trigger: ${{ github.event_name }} at ${{ github.event.head_commit.timestamp }}
+              ## commit message: ${{ github.event.head_commit.message }}
+              ## commit url: ${{ github.event.head_commit.url }}
+              ## commit author: ${{ github.event.head_commit.author.name }}
+              ## commit email: ${{ github.event.head_commit.author.email }}
+              ## commit id: ${{ github.event.head_commit.id }}
+            title: |
+              ${{ github.repository }} ${{ github.event_name }} Message
+            options: '{"bark": { "url": "https://github.com/${{github.repository}}" }}'
+            debug: false
+
+  release:
+    name: Release
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: action-test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 16.x ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Get the version
+        id: get_version
+        run: |
+          # Get the version from package.json
+          echo "PACKAGE_VERSION_NAME=$(node -p "require('./package.json').version")“ >> $GITHUB_ENV
+          # Get the name from package.json
+          echo "PACKAGE_NAME=$(node -p "require('./package.json').name")“ >> $GITHUB_ENV
+          # current push sha
+          echo "COMMIT_ID=$(echo ${{ github.sha }} | cut -c1-7)“ >> $GITHUB_ENV
+          # current push tag
+          echo "VERSION=$(echo $GITHUB_REF | cut -d / -f 3)“ >> $GITHUB_ENV
+          # latest tag
+          echo "TAG_NAME=$(git describe --tags --abbrev=0)“ >> $GITHUB_ENV
+          # set current timestamp
+          echo "BUILD_TIMESTAMP=$(date +%s)“ >> $GITHUB_ENV
+          # set current time and format
+          echo "BUILD_TIME=$(date "+%Y-%m-%d-%H-%M")“ >> $GITHUB_ENV
+      - name: Set dist name
+        id: set_dist_name
+        run: |
+          echo "DIST_ZIP_NAME=$(echo "${{ env.DIST_ARCHIVE_PREFIX_NAME }}-${{ env.PACKAGE_VERSION_NAME }}-${{env.BUILD_TIMESTAMP}}-${{ env.COMMIT_ID }}.zip")"" >> $GITHUB_ENV
+      - name: Build changelog
+        id: build_changelog
+        uses: mikepenz/release-changelog-builder-action@v2.9.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          configuration: ".github/config/changelog_configuration.json"
+          ignorePreReleases: "false"
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: 'https://registry.npmjs.org/'
+          cache: 'npm'
+      - name: Install dependencies and build
+        run: |
+          npm ci
+          npm run build
+      - name: Release package
+        uses: papeloto/action-zip@v1
+        with:
+          files: dist/ READEME.md package.json LICENSE action.yml
+          recursive: false
+          dest: |
+            ${{ env.DIST_ZIP_NAME }}.zip
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: Leon
+          author_email: silenceace@gmail.com
+          message: |
+            ${{ env.PACKAGE_VERSION_NAME }}
+          add: .
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ env.PACKAGE_VERSION_NAME }}-${{ env.COMMIT_ID }}
+          tag_name: ${{ env.TAG_NAME }}
+          body: ${{steps.build_changelog.outputs.changelog}}
+          files: |
+            ${{ env.DIST_ZIP_NAME }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+
+  push-release-message:
+    name: Push release message
+    runs-on: ubuntu-latest
+    needs: [release]
+    steps:
+      - name: Push message
+        uses: funnyzak/pushoo-action@main
+        with:
           platforms: ifttt,wecombot,bark
           tokens: ${{ secrets.PUSH_TOKEN }}
           content: |
-            # ${{ github.event.repository.name }} Action Test Message
+            # ${{ github.event.repository.name }} Released
             ## trigger: ${{ github.event_name }} at ${{ github.event.head_commit.timestamp }}
             ## commit message: ${{ github.event.head_commit.message }}
             ## commit url: ${{ github.event.head_commit.url }}
@@ -34,71 +159,3 @@ jobs:
             ${{ github.repository }} ${{ github.event_name }} Message
           options: '{"bark": { "url": "https://github.com/${{github.repository}}" }}'
           debug: false
-
-  release:
-    name: Release
-    env:
-      DIST_ARCHIVE_NAME: ${{ github.event.repository.name }}
-    runs-on: ubuntu-latest
-    needs: [action-test]
-    if: startsWith(github.ref, 'refs/tags/')
-    strategy:
-      matrix:
-        node-version: [ 16.x ]
-    steps:
-    -
-      name: Checkout
-      uses: actions/checkout@v2
-    -
-      name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-        registry-url: 'https://registry.npmjs.org/'
-        cache: 'npm'
-    -
-      name: Install dependencies and build
-      run: |
-        npm install
-        npm run build
-    -
-      name: Get the version
-      id: get_version
-      run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
-    -
-      name: Build changelog
-      id: build_changelog
-      uses: mikepenz/release-changelog-builder-action@v2.9.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        configuration: ".github/config/changelog_configuration.json"
-        ignorePreReleases: "false"
-    -
-      name: Release package
-      uses: papeloto/action-zip@v1
-      with:
-        files: dist/ READEME.md package.json LICENSE action.yml
-        recursive: false
-        dest: ${{ env.DIST_ARCHIVE_NAME }}.zip
-    -
-      name: Release
-      uses: softprops/action-gh-release@v1
-      with:
-        body: ${{steps.build_changelog.outputs.changelog}}
-        files:  |
-          ${{ env.DIST_ARCHIVE_NAME }}.zip
-      env:
-        GITHUB_TOKEN: ${{ secrets.github_token }}
-    -
-      name: Pushoo Push
-      uses: ./.
-      with:
-        platforms: ifttt, wecombot, bark
-        tokens: ${{ secrets.PUSH_TOKEN }}
-        content: |
-          # ${{ github.event.repository.name }}: ${{ steps.get_version.outputs.VERSION }} Released
-          trigger event: ${{ github.event_name }}
-        title: "${{ github.event.repository.name }}:${{ steps.get_version.outputs.VERSION }} Released"
-        options: '{"bark": { "url": "https://github.com/${{github.repository}}" }}'
-        debug: false

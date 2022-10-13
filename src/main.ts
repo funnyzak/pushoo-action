@@ -1,8 +1,7 @@
-import * as fs from 'fs';
-import * as stateHelper from './state-helper';
-import * as context from './context';
 import * as core from '@actions/core';
 import pushoo, {ChannelType} from 'pushoo';
+import * as context from './context';
+import * as stateHelper from './state-helper';
 
 async function run(): Promise<void> {
   try {

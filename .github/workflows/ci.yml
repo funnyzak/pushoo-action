@@ -111,19 +111,19 @@ jobs:
           recursive: false
           dest: |
             ${{ env.DIST_ZIP_NAME }}.zip
-      - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          # branch: main
-          tagging_message: ${{ env.TAG_NAME }}
-          commit_user_name: Leon
-          commit_user_email: silenceace@gmail.com
-          commit_author: leon <silenceace@gmail.com>
-          commit_options: '--no-verify'
-          push_options: '--force'
-          repository: .
-          commit_message: ${{ env.PACKAGE_VERSION_NAME }}
-          file_pattern: dist
+      # - name: Commit changes
+      #   uses: stefanzweifel/git-auto-commit-action@v4
+      #   with:
+      #     # branch: main
+      #     tagging_message: ${{ env.TAG_NAME }}
+      #     commit_user_name: Leon
+      #     commit_user_email: silenceace@gmail.com
+      #     commit_author: leon <silenceace@gmail.com>
+      #     commit_options: '--no-verify'
+      #     push_options: '--force'
+      #     repository: .
+      #     commit_message: ${{ env.PACKAGE_VERSION_NAME }}
+      #     file_pattern: dist
       - name: Release
         uses: softprops/action-gh-release@v1
         with:

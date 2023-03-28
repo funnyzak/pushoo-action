@@ -55,7 +55,7 @@ jobs:
               ## commit id: ${{ github.event.head_commit.id }}
             title: |
               ${{ github.repository }} ${{ github.event_name }} Message
-            options: '{"bark": { "url": "https://github.com/${{github.repository}}" }}'
+            options: '{"bark": { "url": "https://github.com/${{github.repository}}" }, "dingtalk": {"msgtype": "markdown"}}'
             debug: false
 
   release:

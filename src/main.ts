@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import pushoo, {ChannelType} from 'pushoo';
+import pushoo from 'pushoo';
 import * as context from './context';
 import * as stateHelper from './state-helper';
 
@@ -15,9 +15,9 @@ async function run(): Promise<void> {
       core.info(defContext);
     });
 
-    inputs.platforms.forEach(async (platform: ChannelType, index: number) => {
+    for (const [i, platform] of inputs.platforms.entries()) {
       const result = await pushoo(platform, {
-        token: inputs.tokens[index],
+        token: inputs.tokens[i],
         title: inputs.title,
         content: inputs.content,
         options: inputs.options
@@ -26,7 +26,7 @@ async function run(): Promise<void> {
       await core.group(`Platform Push Result`, async () => {
         core.info(JSON.stringify(result));
       });
-    });
+    }
 
     await core.group(`OutPut Info`, async () => {
       core.info(JSON.stringify(defContext));

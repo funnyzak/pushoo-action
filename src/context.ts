@@ -51,7 +51,7 @@ export async function getInputs(): Promise<Inputs> {
 
   try {
     extraOptions = JSON.parse(core.getInput('options'));
-  }catch (e) {
+  } catch (e) {
     extraOptions = undefined;
   }
 

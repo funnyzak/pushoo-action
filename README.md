@@ -22,7 +22,7 @@ A GitHub Action with [Pushoo.js](https://github.com/imaegoo/pushoo) pushes multi
 [repository-url]: https://github.com/funnyzak/pushoo-action
 [rle-url]: https://github.com/funnyzak/pushoo-action/releases/latest
 [rle-all-url]: https://github.com/funnyzak/pushoo-action/releases
-[ci-image]: https://img.shields.io/github/workflow/status/funnyzak/pushoo-action/CI
+[ci-image]: https://img.shields.io/github/actions/workflow/status/funnyzak/pushoo-cli/ci.yml?branch=main
 [ci-url]: https://github.com/funnyzak/pushoo-action/actions
 [rle-image]:  https://github.com/funnyzak/pushoo-action/actions/workflows/ci.yml/badge.svg
 [sg-image]: https://img.shields.io/badge/view%20on-Sourcegraph-brightgreen.svg?style=flat-square

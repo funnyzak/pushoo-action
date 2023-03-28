@@ -43,7 +43,7 @@ jobs:
       - name: Pushoo Push
         uses: ./.
         with:
-            platforms: ifttt,wecombot,bark
+            platforms: ifttt,wecombot,bark,dingtalk
             tokens: ${{ secrets.PUSH_TOKEN }}
             content: |
               # ${{ github.event.repository.name }} Action Test Message

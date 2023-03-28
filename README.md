@@ -54,7 +54,7 @@ jobs:
       - name: Push Message
         uses: funnyzak/pushoo-action@main
         with:
-          platforms: ifttt,wecombot,bark
+          platforms: ifttt,wecombot,bark,dingtalk
           tokens: ${{ secrets.PUSH_TOKEN }}
           content: |
             # ${{ github.event.repository.name }} ${{ github.event_name }} Message
@@ -66,7 +66,7 @@ jobs:
             ## commit id: ${{ github.event.head_commit.id }}
           title: |
             ${{ github.repository }} ${{ github.event_name }} Message
-          options: '{"bark": { "url": "https://github.com/${{github.repository}}" }}'
+          options: '{"bark": { "url": "https://github.com/${{github.repository}}" }, "dingtalk": {"msgtype": "markdown"}}'
           debug: false
 
 ```

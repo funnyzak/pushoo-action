@@ -42,7 +42,7 @@
     "tmp": "^0.2.1"
   },
   "devDependencies": {
-    "@types/node": "^18.15.10",
+    "@types/node": "^20.1.0",
     "@types/tmp": "^0.2.3",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
     "@typescript-eslint/parser": "^5.57.0",
